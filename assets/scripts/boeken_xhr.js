@@ -24,12 +24,31 @@ const boeken = {
     uitvoeren() {
         let html = "";
         this.data.forEach(boek => {
-            let titel = "";
+            let completeTitel = "";
             if (boek.voortitel) {
-                titel += boek.voortitel + " ";
+                completeTitel += boek.voortitel + " ";
             }
-            titel += boek.titel;
-            html += `<h3>${titel}</h3>`;
+            completeTitel += boek.titel;
+
+            // Auteur lijstje aanmaken.
+            let auteurs = "";
+            boek.auteurs.forEach(schrijver => {
+                let tussenvoegsel = schrijver.tussenvoegsel ? schrijver.tussenvoegsel + " " : "";
+                let separator = " ";
+                auteurs += schrijver.voornaam + " " + tussenvoegsel + schrijver.achternaam + separator;
+            });
+
+            // HTML samenstellen.
+            html += `<section class="boek">`;
+            html += `<img class="boek__cover" src="${boek.cover}" alt="${completeTitel}">`
+            html += `<h3 class="boek__kopje">${completeTitel}</h3>`;
+            html += `<p class="boek__auteurs">${auteurs}</p>`
+            html += `<span class="boek__uitgave">Uitgave: ${boek.uitgave}</span>`;
+            html += `<span class="boek__ean">EAN: ${boek.ean}</span>`;
+            html += `<span class="boek__paginas">Aantal bladzijdes: ${boek.paginas}</span>`;
+            html += `<span class="boek__taal">Taal: ${boek.taal}</span>`;
+            html += `<div class="boek__prijs">Prijs: &euro;${boek.prijs}</div>`;
+            html += `</section>`;
         });
         output.innerHTML = html;
     }
