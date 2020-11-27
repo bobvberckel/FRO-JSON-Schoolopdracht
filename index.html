@@ -17,6 +17,20 @@
                 checked>Engels</label>
         <label class="besturing__cb-label"><input type="checkbox" class="besturing__cb-taal" value="Duits"
                 checked>Duits</label>
+
+        <span class="besturing__sorteren">
+            <label class="besturing__select--label">Sorteren op: 
+                <select class="besturing__select">
+                    <option value="titel">Titel</option>
+                    <option value="auteur">Auteur</option>
+                    <option value="uitgave">Uitgave</option>
+                    <option value="paginas">Pagina's</option>
+                    <option value="prijs">Prijs</option>
+                </select>
+            </label>
+            <label><input type="radio" name="oplopendOfAflopen" class="besturing__rb" checked value="1">Oplopend</label>
+            <label><input type="radio" name="oplopendOfAflopen" class="besturing__rb" value="-1">Aflopend</label>
+        </span>
     </div>
 
     <div id="boeken"></div>
