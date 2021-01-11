@@ -21,8 +21,26 @@ xhr.send(); // XMLHttpRequest versturen.
 
 // Object: Winkelwagen (ww)
 const ww = {
-    bestelling: []
+    bestelling: [],
+
+    // Boek toevoegen.
+    boekToevoegen(obj) {
+        ww.bestelling.push(obj);
+        aantalInWinkelwagen.innerHTML = this.bestelling.length; 
+    },
+
+    // Data in localStorage opslaan.
+    dataOpslaan() {
+        localStorage.wwBestelling = JSON.stringify(this.bestelling);
+    },
+
+    // Data uit localStorage halen.
+    dataOphalen() {
+        this.bestelling = JSON.parse(localStorage.wwBestelling);
+        aantalInWinkelwagen.innerHTML = ww.bestelling.length; 
+    }
 }
+ww.dataOphalen();
 
 ww.bestelling = JSON.parse(localStorage.wwBestelling);
 aantalInWinkelwagen.innerHTML = ww.bestelling.length; 
@@ -113,9 +131,7 @@ const boeken = {
 
                 let boekID = e.target.getAttribute(`data-role`);
                 let gekliktBoek = this.data.filter(b => b.ean == boekID);
-                ww.bestelling.push(gekliktBoek[0]);
-                aantalInWinkelwagen.innerHTML = ww.bestelling.length; 
-                localStorage.wwBestelling = JSON.stringify(ww.bestelling);
+                ww.boekToevoegen(gekliktBoek[0]);
             });
         });
     },
