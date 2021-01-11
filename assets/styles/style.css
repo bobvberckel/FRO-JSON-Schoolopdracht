@@ -6,6 +6,7 @@
 body {
     font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
     overflow-x: hidden;
+    width: 100%;
 }
 
 .ww {
@@ -100,6 +101,7 @@ body {
         display: grid;
         grid-template-columns: 1fr 1fr;
     }
+
     .boek:nth-child(4n+2),
     .boek:nth-child(4n+3) {
         background-color: #ccc;
@@ -110,21 +112,21 @@ body {
     display: none;
 }
 
-#haalFormulier:checked ~ .bestelformulier {
+#haalFormulier:checked~.bestelformulier {
     transform: translateX(0vw);
 }
 
 .bestelformulier {
     background-color: whitesmoke;
     position: absolute;
-    width: 90vw;
+    width: 80vw;
     min-height: 90vh;
-    top: 0em;
+    top: 1em;
     border-radius: 2em;
     border: solid grey 2px;
     padding: 2em;
     box-sizing: border-box;
-    margin: 4vh 4vw;
+    margin: 5vh 5vw;
     transform: translateX(100vw);
     transition: transform 1s ease-out;
 }

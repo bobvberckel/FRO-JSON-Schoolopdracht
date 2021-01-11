@@ -25,15 +25,21 @@ const ww = {
 
     // Boek toevoegen.
     boekToevoegen(obj) {
-        ww.bestelling.push(obj);
-        aantalInWinkelwagen.innerHTML = this.bestelling.length; 
+        let gevonden = this.bestelling.filter(b => b.ean == obj.ean);
+        if(gevonden.length == 0) {
+            ww.bestelling.push(obj);
+        } 
+        aantalInWinkelwagen.innerHTML = this.bestelling.length;
         localStorage.wwBestelling = JSON.stringify(this.bestelling);
+        this.uitvoeren();
     },
 
     // Data uit localStorage halen.
     dataOphalen() {
-        this.bestelling = JSON.parse(localStorage.wwBestelling);
-        aantalInWinkelwagen.innerHTML = ww.bestelling.length; 
+        if (localStorage.wwBestelling) {
+            this.bestelling = JSON.parse(localStorage.wwBestelling);
+        }
+        aantalInWinkelwagen.innerHTML = ww.bestelling.length;
         this.uitvoeren();
     },
 
@@ -49,9 +55,9 @@ const ww = {
             completeTitel += boek.titel;
 
             html += "<tr>";
-                html += `<td><img src="${boek.cover}" alt="${completeTitel}" class="bestelFormulier__cover"></td>`;
-                html += `<td>${completeTitel}</td>`;
-                html += `<td>${boek.prijs.toLocaleString(`nl-NL`, {currency: 'EUR', style: 'currency'})}</td>`;
+            html += `<td><img src="${boek.cover}" alt="${completeTitel}" class="bestelFormulier__cover"></td>`;
+            html += `<td>${completeTitel}</td>`;
+            html += `<td>${boek.prijs.toLocaleString(`nl-NL`, {currency: 'EUR', style: 'currency'})}</td>`;
             html += "</tr>";
 
             totaal += boek.prijs;
@@ -61,91 +67,93 @@ const ww = {
         html += "</table>";
 
         document.getElementById(`uitvoer`).innerHTML = html;
-        aantalInWinkelwagen.innerHTML = ww.bestelling.length; 
+        aantalInWinkelwagen.innerHTML = ww.bestelling.length;
     }
 }
 ww.dataOphalen();
 
-ww.bestelling = JSON.parse(localStorage.wwBestelling);
-aantalInWinkelwagen.innerHTML = ww.bestelling.length; 
+aantalInWinkelwagen.innerHTML = ww.bestelling.length;
 
 // Object: Boeken
 const boeken = {
-        taalFilter: ["Engels", "Duits", "Nederlands"], // Taalfilter bepalen.
-        eigenschapSorteren: 'titel', // Eigenschapfilter bepalen.
-        oplopend: 1, // Oplopende functie activeren of deactiveren.
+    taalFilter: ["Engels", "Duits", "Nederlands"], // Taalfilter bepalen.
+    eigenschapSorteren: 'titel', // Eigenschapfilter bepalen.
+    oplopend: 1, // Oplopende functie activeren of deactiveren.
 
-        // Filter uitvoeren op talen.
-        filteren(gegevens) {
-            this.data = gegevens.filter((bk) => {
-                // Filter proces.
-                let bool = false; // Standaard value instellen.
-                this.taalFilter.forEach((taal) => { // Door elke boektaal loopen.
-                    if (bk.taal == taal) {
-                        bool = true;
-                    }
-                });
-
-                return bool; // Return result.
+    // Filter uitvoeren op talen.
+    filteren(gegevens) {
+        this.data = gegevens.filter((bk) => {
+            // Filter proces.
+            let bool = false; // Standaard value instellen.
+            this.taalFilter.forEach((taal) => { // Door elke boektaal loopen.
+                if (bk.taal == taal) {
+                    bool = true;
+                }
             });
-        },
 
-        // Sorteer functie.
-        sorteren() {
-            if (this.eigenschapSorteren == `titel`) { // Sorteren op titel.
-                this.data.sort((a, b) => (a.titel.toUpperCase() > b.titel.toUpperCase()) ? this.oplopend : -1 * this.oplopend);
-            } else if (this.eigenschapSorteren == `paginas`) { // Sorteren op pagina's.
-                this.data.sort((a, b) => (a.paginas > b.paginas) ? this.oplopend : -1 * this.oplopend);
-            } else if (this.eigenschapSorteren == `uitgave`) { // Sorteren op uitgave.
-                this.data.sort((a, b) => (a.uitgave > b.uitgave) ? this.oplopend : -1 * this.oplopend);
-            } else if (this.eigenschapSorteren == `prijs`) { // Sorteren op prijs.
-                this.data.sort((a, b) => (a.prijs > b.prijs) ? this.oplopend : -1 * this.oplopend);
-            } else if (this.eigenschapSorteren == `auteur`) {
-                this.data.sort((a, b) => (a.auteurs[0].achternaam.toUpperCase() > b.auteurs[0].achternaam.toUpperCase()) ? this.oplopend : -1 * this.oplopend); // Sorteren op auteur.
+            return bool; // Return result.
+        });
+    },
+
+    // Sorteer functie.
+    sorteren() {
+        if (this.eigenschapSorteren == `titel`) { // Sorteren op titel.
+            this.data.sort((a, b) => (a.titel.toUpperCase() > b.titel.toUpperCase()) ? this.oplopend : -1 * this.oplopend);
+        } else if (this.eigenschapSorteren == `paginas`) { // Sorteren op pagina's.
+            this.data.sort((a, b) => (a.paginas > b.paginas) ? this.oplopend : -1 * this.oplopend);
+        } else if (this.eigenschapSorteren == `uitgave`) { // Sorteren op uitgave.
+            this.data.sort((a, b) => (a.uitgave > b.uitgave) ? this.oplopend : -1 * this.oplopend);
+        } else if (this.eigenschapSorteren == `prijs`) { // Sorteren op prijs.
+            this.data.sort((a, b) => (a.prijs > b.prijs) ? this.oplopend : -1 * this.oplopend);
+        } else if (this.eigenschapSorteren == `auteur`) {
+            this.data.sort((a, b) => (a.auteurs[0].achternaam.toUpperCase() > b.auteurs[0].achternaam.toUpperCase()) ? this.oplopend : -1 * this.oplopend); // Sorteren op auteur.
+        }
+    },
+
+    // Startup functie.
+    uitvoeren() {
+        this.sorteren(); // Beginnen met sorteren.
+
+        let html = "";
+        this.data.forEach(boek => {
+
+            boek.besteldAantal = 0;
+
+            let completeTitel = "";
+            if (boek.voortitel) { // Als een boek een voortitel heeft, wordt deze vóór de originele titel geplaatst.
+                completeTitel += boek.voortitel + " ";
             }
-        },
+            completeTitel += boek.titel;
 
-        // Startup functie.
-        uitvoeren() {
-            this.sorteren(); // Beginnen met sorteren.
+            // Auteur lijstje aanmaken.
+            let auteurs = "";
+            boek.auteurs.forEach((schrijver, index) => {
+                let tussenvoegsel = schrijver.tussenvoegsel ? schrijver.tussenvoegsel + " " : ""; // Kijken of er een tussenvoegsel is, zo ja wordt deze toegevoegd.
+                let separator = ", "; // Mochten er meerdere schrijvers zijn, worden die schrijvers geseperateerd met een komma.
 
-            let html = "";
-            this.data.forEach(boek => {
-                        let completeTitel = "";
-                        if (boek.voortitel) { // Als een boek een voortitel heeft, wordt deze vóór de originele titel geplaatst.
-                            completeTitel += boek.voortitel + " ";
-                        }
-                        completeTitel += boek.titel;
+                if (index >= boek.auteurs.length - 2) {
+                    separator = " en "; // Als het de laatste schrijver is, worden die schrijvers geseperateerd met een "en".
+                }
 
-                        // Auteur lijstje aanmaken.
-                        let auteurs = "";
-                        boek.auteurs.forEach((schrijver, index) => {
-                            let tussenvoegsel = schrijver.tussenvoegsel ? schrijver.tussenvoegsel + " " : ""; // Kijken of er een tussenvoegsel is, zo ja wordt deze toegevoegd.
-                            let separator = ", "; // Mochten er meerdere schrijvers zijn, worden die schrijvers geseperateerd met een komma.
+                if (index >= boek.auteurs.length - 1) {
+                    separator = ""; // Default separator.
+                }
 
-                            if (index >= boek.auteurs.length - 2) {
-                                separator = " en "; // Als het de laatste schrijver is, worden die schrijvers geseperateerd met een "en".
-                            }
+                auteurs += schrijver.voornaam + " " + tussenvoegsel + schrijver.achternaam + separator; // Auteurs mét voortitel, tussenvoegsel, achternaam en separator toevoegen.
+            });
 
-                            if (index >= boek.auteurs.length - 1) {
-                                separator = ""; // Default separator.
-                            }
-
-                            auteurs += schrijver.voornaam + " " + tussenvoegsel + schrijver.achternaam + separator; // Auteurs mét voortitel, tussenvoegsel, achternaam en separator toevoegen.
-                        });
-
-                        // HTML samenstellen.
-                        html += `<section class="boek">`;
-                        html += `<img class="boek__cover" src="${boek.cover}" alt="${completeTitel}">`
-                        html += `<div class="boek__info">`;
-                        html += `<h3 class="boek__kopje">${completeTitel}</h3>`;
-                        html += `<p class="boek__auteurs">${auteurs}</p>`
-                        html += `<span class="boek__uitgave">Uitgave: ${this.datumOmzetten(boek.uitgave)}</span>`;
-                        html += `<span class="boek__ean">EAN: ${boek.ean}</span>`;
-                        html += `<span class="boek__paginas">Aantal bladzijdes: ${boek.paginas}</span>`;
-                        html += `<span class="boek__taal">Taal: ${boek.taal}</span>`;
-                        html += `<div class="boek__prijs">Prijs: ${boek.prijs.toLocaleString(`nl-NL`, {currency: 'EUR', style: 'currency'})}
-                            <a href="#" class="boek__bestel-knop" data-role="${boek.ean}">Bestellen</a></div>`;
+            // HTML samenstellen.
+            html += `<section class="boek">`;
+            html += `<img class="boek__cover" src="${boek.cover}" alt="${completeTitel}">`
+            html += `<div class="boek__info">`;
+            html += `<h3 class="boek__kopje">${completeTitel}</h3>`;
+            html += `<p class="boek__auteurs">${auteurs}</p>`
+            html += `<span class="boek__uitgave">Uitgave: ${this.datumOmzetten(boek.uitgave)}</span>`;
+            html += `<span class="boek__ean">EAN: ${boek.ean}</span>`;
+            html += `<span class="boek__paginas">Aantal bladzijdes: ${boek.paginas}</span>`;
+            html += `<span class="boek__taal">Taal: ${boek.taal}</span>`;
+            html += `<div class="boek__prijs">Prijs: ${boek.prijs.toLocaleString(`nl-NL`, {currency: 'EUR', style: 'currency'})}
+                    <a href="#" class="boek__bestel-knop" data-role="${boek.ean}">Bestellen</a></div>`;
             html += `</div></section>`;
         });
         output.innerHTML = html; // Output tonen op de website.
@@ -155,6 +163,7 @@ const boeken = {
 
                 let boekID = e.target.getAttribute(`data-role`);
                 let gekliktBoek = this.data.filter(b => b.ean == boekID);
+                gekliktBoek[0].besteldAantal ++;
                 ww.boekToevoegen(gekliktBoek[0]);
             });
         });
