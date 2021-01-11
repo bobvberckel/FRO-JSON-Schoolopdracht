@@ -128,3 +128,7 @@ body {
     transform: translateX(100vw);
     transition: transform 1s ease-out;
 }
+
+.bestelFormulier__cover {
+    height: 3em;
+}
