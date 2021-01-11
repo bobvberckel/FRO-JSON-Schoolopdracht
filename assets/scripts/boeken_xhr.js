@@ -2,6 +2,7 @@ const output = document.getElementById(`boeken`); // HTML ID ophalen.
 const xhr = new XMLHttpRequest(); // XMLHttpRequest aanmaken.
 const taalKeuze = document.querySelectorAll(`.besturing__cb-taal`); // Checkboxen voor de taalfilter ophalen uit HTML.
 const selectKeuze = document.querySelector(`.besturing__select`); // Input voor de dropdown ophalen uit HTML.
+const aantalInWinkelwagen = document.querySelector(`.ww__aantal`);
 
 // XMLHttpRequest instellen.
 xhr.onreadystatechange = () => {
@@ -18,6 +19,12 @@ xhr.onreadystatechange = () => {
 xhr.open(`GET`, `./assets/json/boeken.json`, true); // XMLHttpRequest open zetten en informatie meegeven.
 xhr.send(); // XMLHttpRequest versturen.
 
+// Object: Winkelwagen (ww)
+const ww = {
+    bestelling: []
+}
+
+// Object: Boeken
 const boeken = {
         taalFilter: ["Engels", "Duits", "Nederlands"], // Taalfilter bepalen.
         eigenschapSorteren: 'titel', // Eigenschapfilter bepalen.
@@ -93,10 +100,20 @@ const boeken = {
                         html += `<span class="boek__paginas">Aantal bladzijdes: ${boek.paginas}</span>`;
                         html += `<span class="boek__taal">Taal: ${boek.taal}</span>`;
                         html += `<div class="boek__prijs">Prijs: ${boek.prijs.toLocaleString(`nl-NL`, {currency: 'EUR', style: 'currency'})}
-                            <a href="#" class="boek__bestel-knop">Bestellen</a></div>`;
+                            <a href="#" class="boek__bestel-knop" data-role="${boek.ean}">Bestellen</a></div>`;
             html += `</div></section>`;
         });
         output.innerHTML = html; // Output tonen op de website.
+        document.querySelectorAll(`.boek__bestel-knop`).forEach(knop => {
+            knop.addEventListener(`click`, e => {
+                e.preventDefault();
+
+                let boekID = e.target.getAttribute(`data-role`);
+                let gekliktBoek = this.data.filter(b => b.ean == boekID);
+                ww.bestelling.push(gekliktBoek[0]);
+                aantalInWinkelwagen.innerHTML = ww.bestelling.length;
+            });
+        });
     },
 
     // Datum in de juiste formaat zetten.
