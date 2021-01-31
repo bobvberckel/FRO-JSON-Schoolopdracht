@@ -27,9 +27,10 @@ const ww = {
     boekToevoegen(obj) {
         let gevonden = this.bestelling.filter(b => b.ean == obj.ean);
         if(gevonden.length == 0) {
+            obj.besteldAantal ++;
             ww.bestelling.push(obj);
         } 
-        aantalInWinkelwagen.innerHTML = this.bestelling.length;
+        gevonden[0].besteldAantal ++;
         localStorage.wwBestelling = JSON.stringify(this.bestelling);
         this.uitvoeren();
     },
@@ -46,7 +47,7 @@ const ww = {
     uitvoeren() {
         let html = "<table>";
         let totaal = 0;
-
+        let totaalBesteld = 0;
         this.bestelling.forEach(boek => {
             let completeTitel = "";
             if (boek.voortitel) { // Als een boek een voortitel heeft, wordt deze vóór de originele titel geplaatst.
@@ -57,17 +58,19 @@ const ww = {
             html += "<tr>";
             html += `<td><img src="${boek.cover}" alt="${completeTitel}" class="bestelFormulier__cover"></td>`;
             html += `<td>${completeTitel}</td>`;
+            html += `<td>${boek.besteldAantal}</td>`;
             html += `<td>${boek.prijs.toLocaleString(`nl-NL`, {currency: 'EUR', style: 'currency'})}</td>`;
             html += "</tr>";
 
-            totaal += boek.prijs;
+            totaal += boek.prijs * boek.besteldAantal;
+            totaalBesteld += boek.besteldAantal;
         });
 
         html += `<tr><td>Totaal</td><td>${totaal.toLocaleString(`nl-NL`, {currency: 'EUR', style: 'currency'})}</td></tr>`;
         html += "</table>";
 
         document.getElementById(`uitvoer`).innerHTML = html;
-        aantalInWinkelwagen.innerHTML = ww.bestelling.length;
+        aantalInWinkelwagen.innerHTML = totaalBesteld;
     }
 }
 ww.dataOphalen();
@@ -163,7 +166,6 @@ const boeken = {
 
                 let boekID = e.target.getAttribute(`data-role`);
                 let gekliktBoek = this.data.filter(b => b.ean == boekID);
-                gekliktBoek[0].besteldAantal ++;
                 ww.boekToevoegen(gekliktBoek[0]);
             });
         });
