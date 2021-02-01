@@ -29,8 +29,9 @@ const ww = {
         if(gevonden.length == 0) {
             obj.besteldAantal ++;
             ww.bestelling.push(obj);
-        } 
-        gevonden[0].besteldAantal ++;
+        } else {
+            gevonden[0].besteldAantal ++;
+        }
         localStorage.wwBestelling = JSON.stringify(this.bestelling);
         this.uitvoeren();
     },
@@ -58,8 +59,12 @@ const ww = {
             html += "<tr>";
             html += `<td><img src="${boek.cover}" alt="${completeTitel}" class="bestelFormulier__cover"></td>`;
             html += `<td>${completeTitel}</td>`;
-            html += `<td>${boek.besteldAantal}</td>`;
+            html += `<td class="bestelFormulier__aantal">
+            <i class="fas fa-arrow-down bestelFormulier__verlaag" data-role="${boek.ean}"></i>
+            ${boek.besteldAantal}</td>
+            <i class="fas fa-arrow-up bestelFormulier__verhoog" data-role="${boek.ean}"></i>`;
             html += `<td>${boek.prijs.toLocaleString(`nl-NL`, {currency: 'EUR', style: 'currency'})}</td>`;
+            html += `<td class="bestelFormulier__trash"><i class="fas fa-times bestelFormulier__trash" data-role="${boek.ean}"></i></td>`;
             html += "</tr>";
 
             totaal += boek.prijs * boek.besteldAantal;
@@ -71,6 +76,48 @@ const ww = {
 
         document.getElementById(`uitvoer`).innerHTML = html;
         aantalInWinkelwagen.innerHTML = totaalBesteld;
+        this.trashActiveren();
+        this.hogerLagerActiveren();
+    },
+
+    trashActiveren() {
+        document.querySelectorAll(".bestelFormulier__trash").forEach(trash => {
+            trash.addEventListener("click", e => {
+                let teVerwijderenBoekID = e.target.getAttribute('data-role');
+                this.bestelling = this.bestelling.filter(bk => bk.ean != teVerwijderenBoekID);
+                // Bijwerken van de localstorage.
+                localStorage.wwBestelling = JSON.stringify(this.bestelling);
+                this.uitvoeren(); 
+            });
+        });
+    },
+
+    hogerLagerActiveren() {
+        let hogerKnoppen = document.querySelectorAll(".bestelFormulier__verhoog");
+        hogerKnoppen.forEach(knop => {
+            knop.addEventListener("click", e => {
+                let ophoogID = e.target.getAttribute('data-role');
+                let opTeHogenBoek = this.bestelling.filter(boek => boek.ean == ophoogID);
+                opTeHogenBoek[0].besteldAantal ++;
+                localStorage.wwBestelling = JSON.stringify(this.bestelling);
+                this.uitvoeren();
+            });
+        });
+
+        let lagerKnoppen = document.querySelectorAll(".bestelFormulier__verlaag");
+        lagerKnoppen.forEach(knop => {
+            knop.addEventListener("click", e => {
+                let verlaagID = e.target.getAttribute('data-role');
+                let teVerlagenBoek = this.bestelling.filter(boek => boek.ean == verlaagID);
+                if(teVerlagenBoek[0].besteldAantal > 1) {
+                    teVerlagenBoek[0].besteldAantal --;
+                } else {
+                    this.bestelling = this.bestelling.filter(bk => bk.ean != verlaagID);
+                }
+                localStorage.wwBestelling = JSON.stringify(this.bestelling);
+                this.uitvoeren();
+            });
+        });
     }
 }
 ww.dataOphalen();

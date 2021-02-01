@@ -109,7 +109,7 @@ body {
 }
 
 #haalFormulier {
-    display: none;
+    opacity: 0;
 }
 
 #haalFormulier:checked~.bestelformulier {
@@ -133,4 +133,22 @@ body {
 
 .bestelFormulier__cover {
     height: 3em;
+}
+
+.fa-times {
+    color: red;
+    font-size: 24px;
+}
+
+.bestelFormulier__trash,
+.bestelFormulier__verlaag,
+.bestelFormulier__verhoog {
+    padding: 0 1em;
+    cursor: pointer;
+}
+
+.bestelFormulier__trash:hover,
+.bestelFormulier__verlaag,
+.bestelFormulier__verhoog {
+    color: black;
 }
