@@ -61,8 +61,8 @@ const ww = {
             html += `<td>${completeTitel}</td>`;
             html += `<td class="bestelFormulier__aantal">
             <i class="fas fa-arrow-down bestelFormulier__verlaag" data-role="${boek.ean}"></i>
-            ${boek.besteldAantal}</td>
-            <i class="fas fa-arrow-up bestelFormulier__verhoog" data-role="${boek.ean}"></i>`;
+            ${boek.besteldAantal}
+            <i class="fas fa-arrow-up bestelFormulier__verhoog" data-role="${boek.ean}"></i></td>`;
             html += `<td>${boek.prijs.toLocaleString(`nl-NL`, {currency: 'EUR', style: 'currency'})}</td>`;
             html += `<td class="bestelFormulier__trash"><i class="fas fa-times bestelFormulier__trash" data-role="${boek.ean}"></i></td>`;
             html += "</tr>";
