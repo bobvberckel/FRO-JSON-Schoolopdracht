@@ -365,6 +365,70 @@
         "taal": "Nederlands",
         "ean": 9789044539455,
         "prijs": 15.99
+    },
+    {
+        "titel": "A Promised Land",
+        "cover": "https://media.s-bol.com/BPggONGgO6KY/550x834.jpg",
+        "auteurs": [{
+            "voornaam": "Barack",
+            "achternaam": "Obama"
+        }],
+        "uitgave": "2020-11",
+        "paginas": 768,
+        "taal": "Engels",
+        "ean": 9780241491515,
+        "prijs": 24.99
+    },
+    {
+        "titel": "Een Beloofd Land",
+        "cover": "https://media.s-bol.com/JNKNLAPNnwAg/550x834.jpg",
+        "auteurs": [{
+            "voornaam": "Barack",
+            "achternaam": "Obama"
+        }],
+        "uitgave": "2020-11",
+        "paginas": 928,
+        "taal": "Nederlands",
+        "ean": 9789048840748,
+        "prijs": 45.00
+    },
+    {
+        "titel": "Becoming",
+        "cover": "https://media.s-bol.com/7vm7QBzxj0O/550x835.jpg",
+        "auteurs": [{
+            "voornaam": "Michelle",
+            "achternaam": "Obama"
+        }],
+        "uitgave": "2018-11",
+        "paginas": 400,
+        "taal": "Engels",
+        "ean": 9784087861174,
+        "prijs": 35.99
+    },
+    {
+        "titel": "Mijn Verhaal",
+        "cover": "https://media.s-bol.com/rQyqpR7A4vk/550x830.jpg",
+        "auteurs": [{
+            "voornaam": "Michelle",
+            "achternaam": "Obama"
+        }],
+        "uitgave": "2018-11",
+        "paginas": 480,
+        "taal": "Nederlands",
+        "ean": 9789048840762,
+        "prijs": 26.99
+    },
+    {
+        "titel": "Perestrojka",
+        "cover": "https://media.s-bol.com/R6YnNMxlVDpV/550x732.jpg",
+        "auteurs": [{
+            "voornaam": "Michail",
+            "achternaam": "Gorbatsjov"
+        }],
+        "uitgave": "1987",
+        "paginas": 299,
+        "taal": "Nederlands",
+        "ean": 9789027419279,
+        "prijs": 17.95
     }
-
 ]
